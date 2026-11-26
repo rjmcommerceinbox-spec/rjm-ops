@@ -2,6 +2,7 @@
 
 | Date | Decision / fact | Approved by | Source |
 |---|---|---|---|
+| 2026-11-26 | costs.csv drafted from project records: 16 SKUs costed (incl. 12 Herbin SKUs added), 11 still need invoice figures (marked NEED COST). Draft only - Rob to check before use. | pending Rob | project docs |
 | 2026-11-26 | RJM Amazon App confirmed LIVE (green banner, connected to Amazon UK seller account). SP-API app client set up. | Rob | Rob confirmed in chat 15:50 |
 | 2026-11-26 | RJM Amazon App code added to `app/` (scanned: no keys; logs and data/ excluded). | Rob | zip uploaded 26 Nov |
 | 2026-11-26 | Private GitHub repo `rjm-ops` created as the single source of truth; guardrails adopted; backups to Google Drive "RJM Ops Backup". | Rob | Chat 26 Nov |
