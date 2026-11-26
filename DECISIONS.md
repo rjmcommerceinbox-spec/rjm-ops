@@ -2,6 +2,7 @@
 
 | Date | Decision / fact | Approved by | Source |
 |---|---|---|---|
+| 2026-11-26 | RJM Amazon App confirmed LIVE (green banner, connected to Amazon UK seller account). SP-API app client set up. | Rob | Rob confirmed in chat 15:50 |
 | 2026-11-26 | RJM Amazon App code added to `app/` (scanned: no keys; logs and data/ excluded). | Rob | zip uploaded 26 Nov |
 | 2026-11-26 | Private GitHub repo `rjm-ops` created as the single source of truth; guardrails adopted; backups to Google Drive "RJM Ops Backup". | Rob | Chat 26 Nov |
 | 2026-11-26 | Weekly Operating Instruction adopted: one Monday 08:00 run, each data source pulled once, dashboard + numbered action list, nothing done without approval. Designed to cut token usage. | Rob | Chat 26 Nov (artifact GXNL6Y3LCNdLGrLQbZHc6E) |
@@ -10,6 +11,5 @@
 | 2026-11-20 | SP-API security policy written: keys never seen or pasted by Claude. | Rob | project doc claude/sp_api_security_policy_2026-11-20.md |
 
 ## Open items
-- Confirm whether the SP-API app client was created and the app shows "Live".
 - Fill costs.csv with unit costs.
 - App log shows macOS blocked start.command from reading the Desktop folder ("Operation not permitted"): fix via System Settings → Privacy & Security → Files and Folders / Full Disk Access for Terminal, or move the app folder to ~/Applications.
