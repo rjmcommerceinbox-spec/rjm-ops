@@ -1,0 +1,19 @@
+# Never commit secrets or customer data
+.env
+*.env
+*.key
+*.pem
+*secret*
+*token*
+*credential*
+keys/
+*.keychain*
+# Customer / order data exports
+*orders*.csv
+*customer*
+# App data and caches
+*.db
+*.sqlite
+__pycache__/
+.venv/
+.DS_Store
