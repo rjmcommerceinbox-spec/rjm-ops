@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RJM Amazon UK</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%2312324f%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2214%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22%3ERJM%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --card: #ffffff; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --line: #e8e7e1; --series: #2a78d6; --series-hover: #1c5cab;
+    --good: #0b7a0b; --good-bg: #e6f4e6; --warn: #8a5a00; --warn-bg: #fdf1d6; --bad: #b42d2d; --bad-bg: #fbe8e8;
+    --accent: #12324f; --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d; --surface: #1a1a19; --card: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --line: #2c2c2a; --series: #3987e5; --series-hover: #6da7ec;
+      --good: #4cc44c; --good-bg: #13301a; --warn: #f0b84a; --warn-bg: #3a2c0c; --bad: #ee7b7b; --bad-bg: #3d1717;
+      --accent: #86b6ef;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         background: var(--page); color: var(--ink); }
+  header { display: flex; align-items: center; gap: 16px; padding: 14px 24px; background: var(--card);
+           border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 650; letter-spacing: .2px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+  nav button { border: 0; background: transparent; color: var(--ink-2); padding: 8px 12px; border-radius: 8px;
+               font: inherit; cursor: pointer; }
+  nav button:hover { background: var(--page); }
+  nav button.active { background: var(--accent); color: var(--card); }
+  #quitBtn { color: var(--muted); margin-left: 8px; border: 1px solid var(--line); }
+  .banner { padding: 9px 24px; font-size: 13px; }
+  .banner.sample { background: var(--warn-bg); color: var(--warn); }
+  .banner.live { background: var(--good-bg); color: var(--good); }
+  main { padding: 20px 24px 48px; max-width: 1280px; margin: 0 auto; }
+  section { display: none; } section.active { display: block; }
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .toolbar h2 { font-size: 18px; margin: 0 auto 0 0; }
+  .toolbar .fetched { color: var(--muted); font-size: 12px; }
+  select, button.btn, textarea { font: inherit; color: var(--ink); background: var(--card);
+                                 border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+  button.btn { cursor: pointer; } button.btn:hover { border-color: var(--muted); }
+  button.primary { background: var(--accent); color: var(--card); border-color: var(--accent); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .tile .label { color: var(--ink-2); font-size: 12px; }
+  .tile .value { font-size: 24px; font-weight: 650; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tile .hint { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px;
+          margin-bottom: 18px; overflow-x: auto; }
+  .card h3 { margin: 0 0 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .card h3 .spacer { margin-left: auto; }
+  .scroll { max-height: 440px; overflow: auto; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--ink-2); font-weight: 600; font-size: 12px; position: sticky; top: 0; background: var(--card); cursor: pointer; }
+  td.num, th.num { text-align: right; }
+  td.wrap { white-space: normal; min-width: 220px; }
+  tr:hover td { background: var(--page); }
+  .neg { color: var(--bad); }
+  .pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 99px;
+          font-size: 12px; font-weight: 600; }
+  .pill.good { background: var(--good-bg); color: var(--good); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.bad { background: var(--bad-bg); color: var(--bad); }
+  .pill.neutral { background: var(--page); color: var(--ink-2); }
+  .muted { color: var(--muted); }
+  .note { color: var(--ink-2); font-size: 12px; margin: 8px 0 0; }
+  .grid2 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+  @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+  textarea { width: 100%; min-height: 120px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 240px; }
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--card); padding: 6px 9px;
+         border-radius: 6px; font-size: 12px; display: none; white-space: nowrap; transform: translate(-50%, -110%); }
+  .err { background: var(--bad-bg); color: var(--bad); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; }
+  .loading { color: var(--muted); padding: 20px 0; }
+  a { color: var(--series); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>RJM Commerce · Amazon UK</h1>
+    <div class="sub" id="who">Loading…</div>
+  </div>
+  <nav>
+    <button data-tab="elig" class="active">Eligibility</button>
+    <button data-tab="stock">Stock &amp; inbound</button>
+    <button data-tab="sales">Sales &amp; orders</button>
+    <button data-tab="fin">Fees &amp; profit</button>
+    <button id="quitBtn" title="Stop the app on this Mac">Quit</button>
+  </nav>
+</header>
+<div id="banner" class="banner"></div>
+
+<main>
+  <!-- Eligibility -->
+  <section id="elig" class="active">
+    <div class="toolbar"><h2>Can RJM sell it?</h2></div>
+    <div class="card">
+      <h3>Paste ASINs or barcodes (EAN/UPC), one per line - up to 50</h3>
+      <textarea id="eligInput" placeholder="B0BP1JHT16&#10;3130630503002"></textarea>
+      <div class="toolbar" style="margin:10px 0 0">
+        <button class="btn primary" id="eligRun">Check eligibility</button>
+        <span class="muted" id="eligProgress"></span>
+      </div>
+      <p class="note">Checks Amazon UK for new-condition listing restrictions on RJM's account. "Approval required" links straight to the Seller Central approval page.</p>
+    </div>
+    <div class="card" id="eligResultsCard" style="display:none">
+      <h3>Results <span class="spacer"></span><button class="btn" data-csv="eligTable">Export CSV</button></h3>
+      <table id="eligTable"></table>
+    </div>
+  </section>
+
+  <!-- Stock -->
+  <section id="stock">
+    <div class="toolbar">
+      <h2>FBA stock &amp; inbound</h2>
+      <span class="fetched" id="stockFetched"></span>
+      <button class="btn" data-refresh="stock">Refresh</button>
+    </div>
+    <div id="stockBody" class="loading">Loading…</div>
+  </section>
+
+  <!-- Sales -->
+  <section id="sales">
+    <div class="toolbar">
+      <h2>Sales &amp; orders</h2>
+      <span class="fetched" id="salesFetched"></span>
+      <select id="salesDays"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select>
+      <button class="btn" data-refresh="sales">Refresh</button>
+    </div>
+    <div id="salesBody" class="loading">Loading…</div>
+  </section>
+
+  <!-- Finance -->
+  <section id="fin">
+    <div class="toolbar">
+      <h2>Fees &amp; profit</h2>
+      <span class="fetched" id="finFetched"></span>
+      <select id="finDays"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option><option value="180">Last 180 days</option></select>
+      <button class="btn" data-refresh="fin">Refresh</button>
+    </div>
+    <div id="finBody" class="loading">Loading…</div>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const gbp = v => v == null ? '–' : (v < 0 ? '−' : '') + '£' + Math.abs(v).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const num = v => v == null ? '–' : Number(v).toLocaleString('en-GB');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const loaded = {};
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const d = await r.json();
+  if (!r.ok || d.error) throw new Error(d.error || ('HTTP ' + r.status));
+  return d;
+}
+
+function tile(label, value, hint) {
+  return `<div class="tile"><div class="label">${esc(label)}</div><div class="value">${value}</div>${hint ? `<div class="hint">${esc(hint)}</div>` : ''}</div>`;
+}
+
+function pill(text) {
+  let t = String(text || '');
+  if (/^[A-Z_]+$/.test(t)) t = t.toLowerCase().replace(/_/g, ' ').replace(/^./, c => c.toUpperCase());
+  let cls = 'neutral', icon = '•';
+  if (/^eligible$/i.test(t) || /^received|closed$/i.test(t)) { cls = 'good'; icon = '✓'; }
+  else if (/approval|reorder|awaiting|pending|unshipped|receiving|in transit|working|ready|delivered|checked in/i.test(t)) { cls = 'warn'; icon = '!'; }
+  else if (/not|error|invalid|out of stock|cancel/i.test(t)) { cls = 'bad'; icon = '✕'; }
+  if (/^(shipped|closed)$/i.test(t)) { cls = 'good'; icon = '✓'; }
+  return t ? `<span class="pill ${cls}">${icon} ${esc(t)}</span>` : '';
+}
+
+// Generic table renderer. cols: [{key, label, num, fmt, wrap}]
+function renderTable(el, cols, rows) {
+  el._data = {cols, rows};
+  const head = '<tr>' + cols.map((c, i) => `<th data-i="${i}" class="${c.num ? 'num' : ''}">${esc(c.label)}</th>`).join('') + '</tr>';
+  const body = rows.map(r => '<tr>' + cols.map(c => {
+    const v = r[c.key];
+    const out = c.fmt ? c.fmt(v, r) : esc(v ?? '');
+    const neg = c.num && typeof v === 'number' && v < 0 ? ' neg' : '';
+    return `<td class="${c.num ? 'num' : ''}${c.wrap ? ' wrap' : ''}${neg}">${out}</td>`;
+  }).join('') + '</tr>').join('');
+  el.innerHTML = `<thead>${head}</thead><tbody>${body || `<tr><td colspan="${cols.length}" class="muted">Nothing to show</td></tr>`}</tbody>`;
+  el.querySelectorAll('th').forEach(th => th.onclick = () => {
+    const c = cols[+th.dataset.i];
+    const dir = el._sortKey === c.key ? -el._sortDir : (c.num ? -1 : 1);
+    el._sortKey = c.key; el._sortDir = dir;
+    const sorted = [...rows].sort((a, b) => {
+      const x = a[c.key], y = b[c.key];
+      if (x == null) return 1; if (y == null) return -1;
+      return (x > y ? 1 : x < y ? -1 : 0) * dir;
+    });
+    renderTable(el, cols, sorted); el._sortKey = c.key; el._sortDir = dir;
+  });
+}
+
+function exportCsv(id) {
+  const el = document.getElementById(id);
+  if (!el || !el._data) return;
+  const {cols, rows} = el._data;
+  const q = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const csv = [cols.map(c => q(c.label)).join(',')].concat(rows.map(r => cols.map(c => q(r[c.key])).join(','))).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+  a.download = `rjm-${id}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-csv]'); if (b) exportCsv(b.dataset.csv); });
+
+// Bar chart: single series, one hue, hover tooltip, 4px rounded tops anchored on baseline.
+function barChart(container, data, valueKey, fmt) {
+  const W = 900, H = 240, L = 52, R = 10, T = 12, B = 28;
+  const max = Math.max(1, ...data.map(d => d[valueKey]));
+  const step = niceStep(max / 4);
+  const top = Math.ceil(max / step) * step;
+  const iw = W - L - R, ih = H - T - B, bw = iw / data.length;
+  const gap = Math.min(2, bw * 0.2);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Daily ${valueKey}">`;
+  for (let v = 0; v <= top + 1e-9; v += step) {
+    const y = T + ih - (v / top) * ih;
+    svg += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`;
+    svg += `<text x="${L - 6}" y="${y + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(v, true)}</text>`;
+  }
+  const every = Math.ceil(data.length / 8);
+  data.forEach((d, i) => {
+    const h = (d[valueKey] / top) * ih, x = L + i * bw + gap / 2, w = Math.max(1, bw - gap), y = T + ih - h;
+    const r = Math.min(4, w / 2, h);
+    if (h > 0) svg += `<path class="bar" data-i="${i}" fill="var(--series)" d="M${x},${T + ih} V${y + r} Q${x},${y} ${x + r},${y} H${x + w - r} Q${x + w},${y} ${x + w},${y + r} V${T + ih} Z"/>`;
+    svg += `<rect class="hit" data-i="${i}" x="${L + i * bw}" y="${T}" width="${bw}" height="${ih}" fill="transparent"/>`;
+    if (i % every === 0) svg += `<text x="${L + i * bw + bw / 2}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--muted)">${d.date.slice(8, 10)}/${d.date.slice(5, 7)}</text>`;
+  });
+  svg += `<line x1="${L}" x2="${W - R}" y1="${T + ih}" y2="${T + ih}" stroke="var(--muted)" stroke-width="1"/></svg>`;
+  container.innerHTML = svg + '<div class="tip"></div>';
+  const tip = container.querySelector('.tip');
+  container.querySelectorAll('.hit').forEach(h => {
+    h.addEventListener('mousemove', ev => {
+      const d = data[+h.dataset.i];
+      const box = container.getBoundingClientRect();
+      tip.innerHTML = `<b>${new Date(d.date).toLocaleDateString('en-GB', {weekday: 'short', day: 'numeric', month: 'short'})}</b><br>${gbp(d.revenue)} · ${d.units} units · ${d.orders} orders`;
+      tip.style.left = (ev.clientX - box.left) + 'px'; tip.style.top = (ev.clientY - box.top) + 'px'; tip.style.display = 'block';
+      container.querySelectorAll('.bar').forEach(b => b.setAttribute('fill', b.dataset.i === h.dataset.i ? 'var(--series-hover)' : 'var(--series)'));
+    });
+    h.addEventListener('mouseleave', () => { tip.style.display = 'none'; container.querySelectorAll('.bar').forEach(b => b.setAttribute('fill', 'var(--series)')); });
+  });
+}
+function niceStep(x) { const p = Math.pow(10, Math.floor(Math.log10(x || 1))); const n = x / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+
+// ---------------- Eligibility ----------------
+$('#eligRun').onclick = async () => {
+  const items = $('#eligInput').value.split(/[\s,;]+/).map(s => s.trim()).filter(Boolean);
+  if (!items.length) return;
+  $('#eligRun').disabled = true;
+  $('#eligProgress').textContent = `Checking ${Math.min(items.length, 50)} item(s)…`;
+  try {
+    const d = await api('/api/eligibility', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({items})});
+    $('#eligResultsCard').style.display = 'block';
+    const ok = d.results.filter(r => r.status === 'Eligible').length;
+    $('#eligProgress').textContent = `${ok} of ${d.results.length} eligible`;
+    renderTable($('#eligTable'), [
+      {key: 'input', label: 'Entered'},
+      {key: 'asin', label: 'ASIN', fmt: v => v ? `<a href="https://www.amazon.co.uk/dp/${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>` : '–'},
+      {key: 'title', label: 'Product', wrap: true},
+      {key: 'brand', label: 'Brand'},
+      {key: 'status', label: 'Status', fmt: v => pill(v)},
+      {key: 'reason', label: 'Reason', wrap: true},
+      {key: 'link', label: 'Action', fmt: v => v ? `<a href="${esc(v)}" target="_blank" rel="noopener">Request approval ↗</a>` : ''},
+    ], d.results);
+  } catch (e) {
+    $('#eligProgress').textContent = 'Error: ' + e.message;
+  } finally { $('#eligRun').disabled = false; }
+};
+
+// ---------------- Stock ----------------
+async function loadStock(refresh) {
+  const body = $('#stockBody'); body.classList.remove('loading');
+  if (!loaded.stock) body.innerHTML = '<div class="loading">Loading stock from Amazon…</div>';
+  try {
+    const d = await api('/api/stock' + (refresh ? '?refresh=1' : ''));
+    loaded.stock = true;
+    $('#stockFetched').textContent = 'Updated ' + d._fetched;
+    const t = d.totals;
+    body.innerHTML = `<div class="tiles">
+        ${tile('Sellable at Amazon', num(t.fulfillable), 'units across ' + t.skus + ' SKUs')}
+        ${tile('Inbound', num(t.inbound), 'working, shipped or receiving')}
+        ${tile('Needs action', num(t.alerts), 'out of stock or under 3 weeks cover')}
+        ${tile('Open shipments', num(d.shipments.length), '')}
+      </div>
+      <div class="card"><h3>Stock by SKU <span class="spacer"></span><button class="btn" data-csv="stockTable">Export CSV</button></h3><table id="stockTable"></table>
+        <p class="note">Days of cover = sellable units ÷ average daily units sold over the last 30 days. "Reorder soon" flags under 21 days.</p></div>
+      <div class="card"><h3>Inbound shipments <span class="spacer"></span><button class="btn" data-csv="shipTable">Export CSV</button></h3>
+        ${d.shipments_error ? `<div class="err">Couldn't load shipments: ${esc(d.shipments_error)}</div>` : ''}<table id="shipTable"></table></div>`;
+    renderTable($('#stockTable'), [
+      {key: 'sku', label: 'SKU'}, {key: 'name', label: 'Product', wrap: true},
+      {key: 'fulfillable', label: 'Sellable', num: true}, {key: 'inbound', label: 'Inbound', num: true},
+      {key: 'reserved', label: 'Reserved', num: true}, {key: 'unfulfillable', label: 'Unsellable', num: true},
+      {key: 'sold30', label: 'Sold 30d', num: true}, {key: 'per_week', label: 'Per week', num: true},
+      {key: 'cover_days', label: 'Days cover', num: true, fmt: v => v == null ? '–' : num(v)},
+      {key: 'alert', label: 'Alert', fmt: v => pill(v)},
+    ], d.rows);
+    renderTable($('#shipTable'), [
+      {key: 'id', label: 'Shipment ID'}, {key: 'name', label: 'Name', wrap: true}, {key: 'fc', label: 'Warehouse'},
+      {key: 'status', label: 'Status', fmt: v => pill(v)}, {key: 'lines', label: 'SKUs', num: true},
+      {key: 'shipped', label: 'Units sent', num: true}, {key: 'received', label: 'Received', num: true},
+      {key: 'received', label: 'Progress', fmt: (v, r) => r.shipped ? Math.round(100 * v / r.shipped) + '%' : '–'},
+    ], d.shipments);
+  } catch (e) { body.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+// ---------------- Sales ----------------
+async function loadSales(refresh) {
+  const body = $('#salesBody'); body.classList.remove('loading'); const days = $('#salesDays').value;
+  body.innerHTML = '<div class="loading">Loading orders from Amazon… (first load can take a few minutes while order lines are fetched)</div>';
+  try {
+    const d = await api(`/api/sales?days=${days}` + (refresh ? '&refresh=1' : ''));
+    loaded.sales = true;
+    $('#salesFetched').textContent = 'Updated ' + d._fetched;
+    const t = d.totals;
+    body.innerHTML = `<div class="tiles">
+        ${tile('Sales (inc VAT)', gbp(t.revenue), 'last ' + d.days + ' days, excl. cancelled')}
+        ${tile('Units', num(t.units), '')}
+        ${tile('Orders', num(t.orders), 'avg ' + gbp(t.avg_order))}
+        ${tile('Awaiting dispatch', num(t.pending), 'pending or unshipped')}
+      </div>
+      <div class="card"><h3>Daily sales (£ inc VAT)</h3><div class="chart" id="salesChart"></div></div>
+      <div class="grid2">
+        <div class="card"><h3>By SKU <span class="spacer"></span><button class="btn" data-csv="skuTable">Export CSV</button></h3><table id="skuTable"></table></div>
+        <div class="card"><h3>Daily table <span class="spacer"></span><button class="btn" data-csv="dayTable">Export CSV</button></h3><div class="scroll"><table id="dayTable"></table></div></div>
+      </div>
+      <div class="card"><h3>Recent orders <span class="muted" style="font-weight:400">(no customer details)</span><span class="spacer"></span><button class="btn" data-csv="ordTable">Export CSV</button></h3><div class="scroll"><table id="ordTable"></table></div></div>`;
+    barChart($('#salesChart'), d.daily, 'revenue', (v, axis) => axis ? '£' + v.toLocaleString('en-GB') : gbp(v));
+    renderTable($('#skuTable'), [
+      {key: 'sku', label: 'SKU'}, {key: 'title', label: 'Product', wrap: true},
+      {key: 'units', label: 'Units', num: true}, {key: 'orders', label: 'Orders', num: true},
+      {key: 'revenue', label: 'Sales', num: true, fmt: gbp},
+    ], d.by_sku);
+    renderTable($('#dayTable'), [
+      {key: 'date', label: 'Date', fmt: v => new Date(v).toLocaleDateString('en-GB', {weekday: 'short', day: '2-digit', month: 'short'})}, {key: 'orders', label: 'Orders', num: true},
+      {key: 'units', label: 'Units', num: true}, {key: 'revenue', label: 'Sales', num: true, fmt: gbp},
+    ], [...d.daily].reverse());
+    renderTable($('#ordTable'), [
+      {key: 'date', label: 'Date (UTC)'}, {key: 'id', label: 'Order ID'}, {key: 'status', label: 'Status', fmt: v => pill(v)},
+      {key: 'channel', label: 'Channel'}, {key: 'skus', label: 'SKU(s)', wrap: true},
+      {key: 'units', label: 'Units', num: true}, {key: 'total', label: 'Total', num: true, fmt: gbp},
+    ], d.orders);
+  } catch (e) { body.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+// ---------------- Finance ----------------
+async function loadFin(refresh) {
+  const body = $('#finBody'); body.classList.remove('loading'); const days = $('#finDays').value;
+  body.innerHTML = '<div class="loading">Loading financial events from Amazon…</div>';
+  try {
+    const d = await api(`/api/finance?days=${days}` + (refresh ? '&refresh=1' : ''));
+    loaded.fin = true;
+    $('#finFetched').textContent = 'Updated ' + d._fetched;
+    const t = d.totals;
+    body.innerHTML = `
+      ${d.missing_costs.length ? `<div class="err">No unit cost for ${d.missing_costs.length} SKU(s): ${esc(d.missing_costs.join(', '))}. Add them to <b>costs.csv</b> in the app folder, then press Refresh.</div>` : ''}
+      <div class="tiles">
+        ${tile('Sales inc VAT', gbp(t.gross_inc_vat), 'after refunds')}
+        ${tile('Output VAT', gbp(t.output_vat), 'VAT return box 1')}
+        ${tile('Net sales', gbp(t.sales_net + t.refunds_net), 'ex VAT, after refunds')}
+        ${tile('Amazon fees', gbp(t.item_fees + t.service_fees), 'item ' + gbp(t.item_fees) + ' · account ' + gbp(t.service_fees))}
+        ${tile('Cost of goods', gbp(t.cogs), 'from costs.csv')}
+        ${tile('Profit (ex VAT)', gbp(t.profit), t.margin == null ? '' : t.margin + '% margin')}
+      </div>
+      <div>
+        <div class="card"><h3>Profit by SKU <span class="spacer"></span><button class="btn" data-csv="finTable">Export CSV</button></h3><table id="finTable"></table>
+          <p class="note">From Amazon's posted financial events (money actually settled), so it can lag orders by a few days. Sales and fees are ex VAT; output VAT is shown separately. Account-level fees (selling plan, storage) are in the totals, not per SKU.</p></div>
+        <div class="card"><h3>Fees by type <span class="spacer"></span><button class="btn" data-csv="feeTable">Export CSV</button></h3><table id="feeTable"></table>
+          ${d.other_event_types.length ? `<p class="note">Other event types in this period, not yet broken out: ${esc(d.other_event_types.join(', '))}.</p>` : ''}</div>
+      </div>`;
+    renderTable($('#finTable'), [
+      {key: 'sku', label: 'SKU'}, {key: 'units', label: 'Units', num: true},
+      {key: 'refund_units', label: 'Refunded', num: true},
+      {key: 'sales_net', label: 'Sales ex VAT', num: true, fmt: gbp},
+      {key: 'refunds_net', label: 'Refunds', num: true, fmt: gbp},
+      {key: 'fees', label: 'Amazon fees', num: true, fmt: (v, r) => gbp(r.fees + r.refund_fees)},
+      {key: 'cogs', label: 'Cost of goods', num: true, fmt: gbp},
+      {key: 'profit', label: 'Profit', num: true, fmt: gbp},
+      {key: 'per_unit', label: 'Per unit', num: true, fmt: gbp},
+      {key: 'margin', label: 'Margin', num: true, fmt: v => v == null ? '–' : v + '%'},
+    ], d.rows);
+    renderTable($('#feeTable'), [
+      {key: 'label', label: 'Fee'}, {key: 'type', label: 'Amazon code'},
+      {key: 'amount', label: 'Amount', num: true, fmt: gbp},
+    ], d.fee_types);
+  } catch (e) { body.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+// ---------------- Wiring ----------------
+const loaders = {stock: loadStock, sales: loadSales, fin: loadFin};
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('active', x === b));
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('active', s.id === b.dataset.tab));
+  if (loaders[b.dataset.tab] && !loaded[b.dataset.tab]) loaders[b.dataset.tab]();
+  history.replaceState(null, '', '#' + b.dataset.tab);
+});
+document.querySelectorAll('[data-refresh]').forEach(b => b.onclick = () => loaders[b.dataset.refresh](true));
+$('#salesDays').onchange = () => loadSales();
+$('#finDays').onchange = () => loadFin();
+
+api('/api/status').then(s => {
+  $('#who').textContent = `${s.company} · seller ${s.seller_id} · amazon.co.uk`;
+  const bn = $('#banner');
+  if (s.mode === 'live') { bn.className = 'banner live'; bn.textContent = '✓ Live: connected to your Amazon UK seller account.'; }
+  else { bn.className = 'banner sample'; bn.innerHTML = '! <b>Sample data.</b> These figures are made up for testing. Once Amazon approves the app, run <b>setup_keys.command</b> and restart to see your real data.'; }
+}).catch(() => {});
+// Keep-alive: the app stops itself ~30 minutes after the last dashboard tab is closed.
+setInterval(() => fetch('/api/status').catch(() => {}), 60000);
+$('#quitBtn').onclick = async () => {
+  if (!confirm('Stop the RJM Amazon app? Double-click the desktop icon to start it again.')) return;
+  try { await fetch('/api/quit', {method: 'POST'}); } catch (e) {}
+  document.body.innerHTML = '<main><h2>RJM Amazon app stopped.</h2><p class="muted">You can close this tab. Double-click the RJM Amazon icon on your Desktop to start it again.</p></main>';
+};
+const start = location.hash.slice(1);
+if (start) { const b = document.querySelector(`nav button[data-tab="${start}"]`); if (b) b.click(); }
+</script>
+</body>
+</html>

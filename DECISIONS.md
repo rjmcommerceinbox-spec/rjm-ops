@@ -2,6 +2,7 @@
 
 | Date | Decision / fact | Approved by | Source |
 |---|---|---|---|
+| 2026-11-26 | RJM Amazon App code added to `app/` (scanned: no keys; logs and data/ excluded). | Rob | zip uploaded 26 Nov |
 | 2026-11-26 | Private GitHub repo `rjm-ops` created as the single source of truth; guardrails adopted; backups to Google Drive "RJM Ops Backup". | Rob | Chat 26 Nov |
 | 2026-11-26 | Weekly Operating Instruction adopted: one Monday 08:00 run, each data source pulled once, dashboard + numbered action list, nothing done without approval. Designed to cut token usage. | Rob | Chat 26 Nov (artifact GXNL6Y3LCNdLGrLQbZHc6E) |
 | 2026-11-21 | RJM Amazon App built on Rob's Mac Desktop ("RJM Amazon App" folder): Eligibility, Stock & inbound, Sales & orders, Fees & profit. Keys via setup_keys.command into Keychain. Shows sample data until live. | Rob | Chat 21 Nov |
@@ -11,4 +12,4 @@
 ## Open items
 - Confirm whether the SP-API app client was created and the app shows "Live".
 - Fill costs.csv with unit costs.
-- Copy RJM Amazon App code into `app/` (needs Desktop folder access).
+- App log shows macOS blocked start.command from reading the Desktop folder ("Operation not permitted"): fix via System Settings → Privacy & Security → Files and Folders / Full Disk Access for Terminal, or move the app folder to ~/Applications.

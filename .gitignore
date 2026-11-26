@@ -17,3 +17,6 @@ keys/
 __pycache__/
 .venv/
 .DS_Store
+data/
+*.log
+Icon?
