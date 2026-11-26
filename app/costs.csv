@@ -3,16 +3,16 @@ QC-KF00267-BLK10-FBA-01,3.03,Q-Connect black pens pack of 10 (Staples)
 WIS-FIRM-12-FBA-01,,Wisdom toothbrush - NEED COST (not an ExaClair line)
 LG-75LA-QF9U,,Clairefontaine Bamboo pad A2 (975921C) - NEED COST from ExaClair invoice
 T6-QX5I-Y0IN,,Exacompta Flex box navy/light blue (3500383D) - NEED COST from ExaClair invoice
-RJM-GH-31-16,,Guildhall 31/16Z - NEED COST: invoice 5580278281 (x3) - HOLD (gated)
-RJM-GH-38-16,,Guildhall 38/16Z - NEED COST: invoice 5580278281 (x5) - HOLD (gated)
+RJM-GH-31-16,5.62,Guildhall 31/16Z - invoice 5580278281 - HOLD (gated)
+RJM-GH-38-16,6.37,Guildhall 38/16Z - invoice 5580278281 - HOLD (gated)
 RJM-GH-48-6-12Z,6.33,Guildhall 48/6-12Z - invoice 5580278253: 5 for 31.65 - HOLD (gated)
 RJM-GH-T1197,,Guildhall T1197Z - NEED COST: invoice 5580278525 (x4) - HOLD (gated)
 RJM-GH-GP14,5.11,Guildhall GP14Z - invoice 5580278253: 4 for 20.44 - HOLD (gated)
-RJM-GH-GP2,,Guildhall GP2Z - NEED COST: invoice 5580278281 (x5) - HOLD (gated)
-RJM-GH-GP8S,,Guildhall GP8SZ - NEED COST: invoice 5580278281 (x4) - HOLD (gated)
+RJM-GH-GP2,2.30,Guildhall GP2Z - invoice 5580278281 - HOLD (gated)
+RJM-GH-GP8S,2.30,Guildhall GP8SZ - invoice 5580278281 - HOLD (gated)
 RJM-GL-GPT1A4,,Goldline GPT1A4Z - NEED COST: invoice 5580278284 (x5) - HOLD (gated)
-RJM-EX-53310E,,Exacompta 53310E lever arch - NEED COST: invoice 5580278281 (x10) - HOLD (gated)
-RJM-EX-55046E,,Exacompta 55046E card pockets - NEED COST: invoice 5580278281 (x10) - HOLD (gated)
+RJM-EX-53310E,4.07,Exacompta 53310E lever arch - invoice 5580278281 - HOLD (gated)
+RJM-EX-55046E,2.25,Exacompta 55046E card pockets - invoice 5580278281 - HOLD (gated)
 RJM-CF-96007C,11.24,Clairefontaine Pastelmat 96007C - price agreed with Sam 30 Oct (invoice 5580278283) - HOLD (gated)
 RJM-JH-15045JT,9.75,Herbin 15045JT - EX-005 invoice 5580278812
 RJM-JH-15007JT,10.07,Herbin 15007JT - EX-005 invoice 5580278812
@@ -26,3 +26,4 @@ RJM-JH-13768T,5.02,Herbin 13768T - EX-005 invoice 5580278812
 RJM-JH-13048T,3.68,Herbin 13048T - EX-005 invoice 5580278812
 RJM-JH-25600T,1.86,Herbin 25600T blotter refills - ExaClair price list
 RJM-JH-12300T,3.16,Herbin 12300T pen cleaner 50ml - ExaClair price list
+RJM-GH-31-5,5.62,Guildhall 31/5Z - invoice 5580278281
